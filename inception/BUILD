@@ -196,3 +196,30 @@ filegroup(
     ],
     visibility = ["//visibility:public"],
 )
+
+# darkskies-challenge
+py_binary(
+    name = "dk_build_image_data",
+    srcs = ["data/dk_build_image_data.py"],
+)
+
+py_library(
+    name = "dk_data",
+    srcs = [
+        "dk_data.py",
+    ],
+    deps = [
+        ":dataset",
+    ],
+)
+    
+py_binary(
+    name = "dk_train",
+    srcs = [
+        "dk_train.py",
+    ],
+    deps = [
+        ":dk_data",
+        ":inception_train",
+    ],
+)
