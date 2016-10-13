@@ -1,0 +1,7 @@
+astronaut
+aurora
+black
+city
+none
+stars
+unknown
