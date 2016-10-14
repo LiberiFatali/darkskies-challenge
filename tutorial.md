@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This tutorial focuses on Dark Skies - Classification of Nighttime Images (https://www.crowdai.org/challenges/dark-skies-classification-of-nighttime-images), an interesting challenge on CrowdAI.
+This tutorial focuses on [Dark Skies - Classification of Nighttime Images](https://www.crowdai.org/challenges/dark-skies-classification-of-nighttime-images), an interesting challenge on CrowdAI.
 
 The goal of this challenge is to use the manually labeled data-set to develop an image classification algorithm that can correctly identify whether an photo shows stars, cities, or other objects. These photos were taken at night. There are 101,554 images in train set and 52,317 images in test set.
 <center>
@@ -10,7 +10,10 @@ The goal of this challenge is to use the manually labeled data-set to develop an
 *The Iberian Peninsula at night, showing Spain and Portugal. Madrid is the bright spot just above the center. Credits: NASA*
 </center>
 
-This tutorial is structured as a hand-on document. Details about machine learning, neural network or convolution neural network aren't included. If you are new to machine learning, I recommend you this excellent course by Andrew Ng from Cousera: https://www.coursera.org/learn/machine-learning. In case you are already familiar with machine learning, the CS231n from Standford (http://cs231n.stanford.edu) will be a great resource when dealing with visual recognition problem. 
+This tutorial is structured as a hand-on document. Details about machine learning, neural network or convolution neural network aren't included. 
+
+If you are new to machine learning, I recommend you this excellent course by Andrew Ng from Cousera: https://www.coursera.org/learn/machine-learning. In case you are already familiar with machine learning, the CS231n from Standford (http://cs231n.stanford.edu) will be a great resource when dealing with visual recognition problem. 
+
 This tutorial also uses Convolution Neural Network (CNN), which described extensively in CS231n course. The model is based on Google Inception v3 architecture on Tensorflow framework. Other scripts are written in Python.
 
 
@@ -29,20 +32,26 @@ Ubuntu 14.04, CUDA 8.0, CuDNN 5.1
 
 ## Code
 
-Github repo contains Tensorflow codes and instructions to train the model on Dark Skies - Classification of Nighttime Images dataset can be found here:  https://github.com/LiberiFatali/darkskies-challenge. This repo is based on Google Inception-v3 repo. To clone it to local computer, git is required. Then open the Terminal and enter command: git clone https://github.com/LiberiFatali/darkskies-challenge.
+Github repo contains Tensorflow codes and instructions to train the model on Dark Skies - Classification of Nighttime Images dataset can be found here: https://github.com/LiberiFatali/darkskies-challenge. This repo is based on Google Inception-v3 repo. 
+
+To clone it to local computer, git is required. Then open the Terminal and enter command: 
+```
+git clone https://github.com/LiberiFatali/darkskies-challenge
+```
 
 ## Data
 
-List of images can be downloaded from CrowdAI website (https://www.crowdai.org/challenges/dark-skies-classification-of-nighttime-images/dataset_files). After getting `train.csv` and `test_release.csv` and put them in cloned folder, run script `dk_download.py` to download actual images from Nasa.
+List of images can be downloaded from CrowdAI website: https://www.crowdai.org/challenges/dark-skies-classification-of-nighttime-images/dataset_files. After getting `train.csv` and `test_release.csv` and put them in cloned folder, run script `dk_download.py` to download actual images from Nasa.
 
 When train images are downloaded, there should be a 'train' folder with 7 sub-folders that are: `astronaut, aurora, black, city, none, stars, unknown`. This is necessary for later step that convert images to Tensorflow format data. To download test images, just switch to function downloadTestFile and test images will be stored in 'test_release' folder.
 
 ## Approach and Model
 
 I use Inception v3 architecture as described in “Rethinking the Inception Architecture for Computer Vision” by Christian Szegedy, Vincent Vanhoucke, Sergey Ioffe, Jonathon Shlens, Zbigniew Wojna. The original paper can be access here: https://arxiv.org/abs/1512.00567.  
-
+<center>
 ![inception_v3_architecture.png](https://github.com/LiberiFatali/darkskies-challenge/blob/master/g3doc/inception_v3_architecture.png)
 *Schematic diagram of Inception V3*
+</center>
 
 To speed up the training process, I use the model that is trained on ImageNet 1k dataset. It is released by Google. These are steps to download:
 ```
@@ -68,7 +77,7 @@ model.ckpt-157585
 
 ## Preprocessing images
 
-The main script prepares dataset for Tensorflow format is dk_build_image_data.py. Briefly, this script takes a structured directory of images and converts it to a sharded TFRecord that can be read by the Inception model.
+The main script prepares dataset for Tensorflow format is `dk_build_image_data.py`. Briefly, this script takes a structured directory of images and converts it to a sharded TFRecord that can be read by the Inception model.
 
 The directory of training images is created with following structure:
 ```
@@ -95,8 +104,10 @@ The directory of training images is created with following structure:
   ...
 ```	
 In parent folder `train`, each unique label has its own sub-folder that holds images belong to this label. 
-Once the data is arranged in this directory structure, we can run [dk_build_image_data.py] on the data to generate the shardedTFRecord dataset. Each entry of the TFRecord is a serialized tf.Example protocol buffer. A complete list of information contained in the tf.Example is described in the comments of [dk_build_image_data.py].
-Set `DK_ROOT` to the folder that is cloned from darkskies-challenge github repo (https://github.com/LiberiFatali/darkskies-challenge). To run [dk_build_image_data.py], you can run the following in command line:
+
+Once the data is arranged in this directory structure, we can run `dk_build_image_data.py` on the data to generate the shardedTFRecord dataset.
+
+Set `DK_ROOT` to the folder that is cloned from darkskies-challenge github repo. To run `dk_build_image_data.py`, enter following in commands in the terminal:
 ```
 ## Prepare dataset , this should be modified for your computer
 # here I assume that all folders and files are in $DK_ROOT,
@@ -116,7 +127,7 @@ bazel build -c opt inception/dk_build_image_data
 bazel-bin/inception/dk_build_image_data --train_directory="${TRAIN_DIR}" --output_directory="${OUTPUT_DIRECTORY}" --labels_file="${LABELS_FILE}" --train_shards=96 --num_threads=8
 ```
 
-The `$LABELS_FILE` will be a text file that is read by the script that provides a list of all of the labels. Concretely, $LABELS_FILEcontained the following data:
+The `$LABELS_FILE` will be a text file that is read by the script that provides a list of all of the labels. Concretely, `$LABELS_FILE` contained the following data:
 ```
 astronaut
 aurora
@@ -136,6 +147,7 @@ After running this script produces files that look like the following:
   $TRAIN_DIR/train-00095-of-00096
 ```
 where 96 is the number of shards specified for darkskies-challenge dataset. We aim for selecting the number of shards such that roughly 1024 images reside in each shard. One this data set is built you are ready to train or fine-tune an Inception model on this data set.
+
 Note, be sure to check `num_examples_per_epoch()` in `dk_data.py` to correspond with your number of downloaded images.
 
 
@@ -144,10 +156,14 @@ Note, be sure to check `num_examples_per_epoch()` in `dk_data.py` to correspond 
 We are now ready to fine-tune a pre-trained Inception-v3 model on the darkskies-challenge data set. This requires two distinct changes to our training procedure:
 1. Build the exact same model as previously except we change the number of labels in the final classification layer.
 2. Restore all weights from the pre-trained Inception-v3 except for the final classification layer; this will get randomly initialized instead.
-We can perform these two operations by specifying two flags: `--pretrained_model_checkpoint_path` and `--fine_tune`. The first flag is a string that points to the path of a pre-trained Inception-v3 model. If this flag is specified, it will load the entire model from the checkpoint before the script begins training.
+
+We can perform these two operations by specifying two flags: `--pretrained_model_checkpoint_path` and `--fine_tune`. 
+
+The first flag is a string that points to the path of a pre-trained Inception-v3 model. If this flag is specified, it will load the entire model from the checkpoint before the script begins training.
+
 The second flag `--fine_tune` is a boolean that indicates whether the last classification layer should be randomly initialized or restored. You may set this flag to false if you wish to continue training a pre-trained model from a checkpoint. If you set this flag to true, you can train a new classification layer from scratch.
 
-Putting this all together you can retrain a pre-trained Inception-v3 model on the darkskies-challenge data set with the following command.
+Putting this all together you can retrain a pre-trained Inception-v3 model on the darkskies-challenge data set with the following commands.
 ```
 ## Finetune 
 # Build the training binary to run on a GPU. If you do not have a GPU, 
@@ -167,6 +183,7 @@ bazel-bin/inception/dk_train --train_dir="${FINETUNE_DIR}" --data_dir="${DK_DATA
 ```
 
 Fine-tuning a model a separate data set requires significantly lowering the initial learning rate. We set the initial learning rate to 0.001.
+
 Now the training is in progress, it constantly outputs to terminal screen:
 ```
 2016-10-13 11:56:22.949164: step 0, loss = 3.11 (1.6 examples/sec; 20.053 sec/batch)
@@ -182,14 +199,15 @@ Now the training is in progress, it constantly outputs to terminal screen:
 2016-10-13 11:57:51.469971: step 100, loss = 1.51 (46.0 examples/sec; 0.696 sec/batch)
 …
 ```
-The loss should be decreased gradually. I trained this model for 45000 steps
+The loss should be decreased gradually. I trained this model for 45000 steps.
 
 
 # Testing
-To evaluate trained model on CrowAI Dark Skies challenge test set, use `dk_classify.py` script in the repo. Note that you need to modify 'MODEL_CHECKPOINT_PATH', 'folder' and 'test_csv' to fit your folder structure.
-
+To evaluate trained model on CrowAI Dark Skies challenge test set, use `dk_classify.py` script in the repo. Note that you need to modify `MODEL_CHECKPOINT_PATH`, `folder` and `test_csv` to fit your folder structure.
+<center>
 ![dk_sample_test.png](https://github.com/LiberiFatali/darkskies-challenge/blob/master/g3doc/dk_sample_test.png)
 *Sample result when running on test set*
+</center>
 
 This model gets 85% accuracy in the challenge leader board.
 
