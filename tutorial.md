@@ -20,7 +20,7 @@ This tutorial also uses Convolution Neural Network (CNN), which described extens
 ## Setup
 - First, Tensorflow needs to be installed, then clone the code in the github repo below.
 
-- Instructions to install Tensorflow (https://github.com/tensorflow/tensorflow/blob/master/tensorflow/g3doc/get_started/os_setup.md). You may want to use GPU version for faster processing. For reference, this is my PC configuration when training the model:
+- Instructions to install Tensorflow: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/g3doc/get_started/os_setup.md. You may want to use GPU version for faster processing. For reference, this is my PC configuration when training the model:
 ```
 CPU: Core i7-4790K
 RAM: 32GB
@@ -32,7 +32,7 @@ Ubuntu 14.04, CUDA 8.0, CuDNN 5.1
 
 ## Code
 
-Github repo contains Tensorflow codes and instructions to train the model on Dark Skies - Classification of Nighttime Images dataset can be found here: https://github.com/LiberiFatali/darkskies-challenge. This repo is based on Google Inception-v3 repo. 
+Github repo contains Tensorflow codes, and instructions to train the model on Dark Skies - Classification of Nighttime Images dataset can be found here: https://github.com/LiberiFatali/darkskies-challenge. This repo is based on Google Inception-v3 repo. 
 
 To clone it to local computer, git is required. Then open the Terminal and enter command: 
 ```
@@ -43,7 +43,7 @@ git clone https://github.com/LiberiFatali/darkskies-challenge
 
 List of images can be downloaded from CrowdAI website: https://www.crowdai.org/challenges/dark-skies-classification-of-nighttime-images/dataset_files. After getting `train.csv` and `test_release.csv` and put them in cloned folder, run script `dk_download.py` to download actual images from Nasa.
 
-When train images are downloaded, there should be a 'train' folder with 7 sub-folders that are: `astronaut, aurora, black, city, none, stars, unknown`. This is necessary for later step that convert images to Tensorflow format data. To download test images, just switch to function downloadTestFile and test images will be stored in 'test_release' folder.
+When train images are downloaded, there should be a `train` folder with 7 sub-folders that are: `astronaut, aurora, black, city, none, stars, unknown`. This is necessary for later step that convert images to Tensorflow format data. To download test images, just switch to function `downloadTestFile` and test images will be stored in `test_release` folder.
 
 ## Approach and Model
 
@@ -154,8 +154,8 @@ Note, be sure to check `num_examples_per_epoch()` in `dk_data.py` to correspond 
 ## Training
 
 We are now ready to fine-tune a pre-trained Inception-v3 model on the darkskies-challenge data set. This requires two distinct changes to our training procedure:
-1. Build the exact same model as previously except we change the number of labels in the final classification layer.
-2. Restore all weights from the pre-trained Inception-v3 except for the final classification layer; this will get randomly initialized instead.
+- Build the exact same model as previously except we change the number of labels in the final classification layer.
+- Restore all weights from the pre-trained Inception-v3 except for the final classification layer; this will get randomly initialized instead.
 
 We can perform these two operations by specifying two flags: `--pretrained_model_checkpoint_path` and `--fine_tune`. 
 
@@ -210,6 +210,5 @@ To evaluate trained model on CrowAI Dark Skies challenge test set, use `dk_class
 </center>
 
 This model gets 85% accuracy in the challenge leader board.
-
 
 
