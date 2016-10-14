@@ -5,4 +5,5 @@
 /bazel-inception
 /bazel-testlogs
 /bazel-tf
+*.pyc
 inception-v3-model
