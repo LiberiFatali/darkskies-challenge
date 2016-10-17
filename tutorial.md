@@ -153,8 +153,8 @@ Note, be sure to check `num_examples_per_epoch()` in `dk_data.py` to correspond 
 
 ## Training
 
-We are now ready to fine-tune a pre-trained Inception-v3 model on the darkskies-challenge data set. This requires two distinct changes to our training procedure:
-- Build the exact same model as previously except we change the number of labels in the final classification layer.
+We are now ready to fine-tune a pre-trained Inception-v3 model on the darkskies-challenge data set. This requires two notable steps:
+- Build the exact same model as pretrained Inception-v3 except we change the number of labels in the final classification layer.
 - Restore all weights from the pre-trained Inception-v3 except for the final classification layer; this will get randomly initialized instead.
 
 We can perform these two operations by specifying two flags: `--pretrained_model_checkpoint_path` and `--fine_tune`. 
